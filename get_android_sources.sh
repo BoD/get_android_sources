@@ -12,7 +12,7 @@
 
 # get_android_sources.sh
 #
-# v1.00
+# v1.01
 #
 # A script to help downloading the Android sources and copy them to your sdk 
 # directory, so you can see them in Eclipse.
@@ -29,12 +29,30 @@ echo '0/ Checking preconditions and setting variables'
 echo
 hash curl 2>&- || { echo >&2 "curl is missing.  If you are on Ubuntu, try 'sudo apt-get curl'.  Aborting."; exit 1; }
 hash python 2>&- || { echo >&2 "python is missing.  If you are on Ubuntu, try 'sudo apt-get python'.  Aborting."; exit 1; }
+hash git 2>&- || { echo >&2 "git is missing.  If you are on Ubuntu, try 'sudo apt-get git'.  Aborting."; exit 1; }
+rm -rf _tmp
+mkdir _tmp
+cd _tmp
 echo
+echo "Please wait a bit..."
+curl -s http://dl.dropbox.com/u/9317624/Android%20Api%20Levels.txt > api_levels.txt
+echo "As a reminder, Android Api Levels to Version Numbers:"
+cat api_levels.txt
+echo
+
+echo "Please wait a bit..."
+git ls-remote -t https://android.googlesource.com/platform/frameworks/base.git | grep -v '{}' | cut -d / -f 3 > tags.txt
+echo "List of available tags:"
+cat tags.txt
+echo
+
+cd ..
+rm -rf _tmp
 
 tag=
 while [ -z $tag ]
 do
-    echo -n "Tag to get (list available at http://android.git.kernel.org/?p=platform/frameworks/base.git;a=tags - for instance 'android-2.3.3_r1.1'): "
+    echo -n "Tag to get (list available above - for instance 'android-2.3.3_r1.1'): "
     read tag
 done
 
@@ -42,9 +60,10 @@ echo
 sdkdir=
 while [ -z $sdkdir ]
 do
-    echo -n "Target directory (for instance '/home/bod/android-sdk-linux_86/platforms/android-9'): "
+    echo -n "Android SDK platform directory (for instance '/home/bod/android-sdk-linux_86/platforms/android-9'): "
     read sdkdir
 done
+
 
 echo
 echo
@@ -54,11 +73,12 @@ if [ -d "bin" ]; then
 	echo 'bin directory already exists: skipping download'
 else
 	mkdir bin
-	curl https://android.git.kernel.org/repo > bin/repo
+	curl https://dl-ssl.google.com/dl/googlesource/git-repo/repo > bin/repo
 	chmod a+x bin/repo
 	curl http://browse-androidsdk-sources-in-eclipse.googlecode.com/svn/trunk/copy_sources.py > bin/copy_sources.py
 	chmod a+x bin/copy_sources.py
 fi
+
 
 echo
 echo
@@ -72,7 +92,8 @@ else
 fi
 
 cd WORKING_DIRECTORY
-../bin/repo init -u git://android.git.kernel.org/platform/manifest.git -b $tag
+../bin/repo init -u https://android.googlesource.com/platform/manifest -b $tag
+
 
 echo
 echo
