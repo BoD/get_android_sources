@@ -27,9 +27,9 @@ echo
 echo
 echo '0/ Checking preconditions and setting variables'
 echo
-hash curl 2>&- || { echo >&2 "curl is missing.  If you are on Ubuntu, try 'sudo apt-get curl'.  Aborting."; exit 1; }
-hash python 2>&- || { echo >&2 "python is missing.  If you are on Ubuntu, try 'sudo apt-get python'.  Aborting."; exit 1; }
-hash git 2>&- || { echo >&2 "git is missing.  If you are on Ubuntu, try 'sudo apt-get git'.  Aborting."; exit 1; }
+hash curl 2>&- || { echo >&2 "curl is missing.  If you are on Ubuntu, try 'sudo apt-get install curl'.  Aborting."; exit 1; }
+hash python 2>&- || { echo >&2 "python is missing.  If you are on Ubuntu, try 'sudo apt-get install python'.  Aborting."; exit 1; }
+hash git 2>&- || { echo >&2 "git is missing.  If you are on Ubuntu, try 'sudo apt-get install git'.  Aborting."; exit 1; }
 rm -rf _tmp
 mkdir _tmp
 cd _tmp
